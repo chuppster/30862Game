@@ -418,6 +418,8 @@ public class GameManager extends GameCore {
         }
         if (creature instanceof Player) {
             checkPlayerCollision((Player)creature, false);
+            Player p = (Player) creature;
+            //p.setFlying(true);
         }
 
         // change y

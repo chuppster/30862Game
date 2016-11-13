@@ -30,6 +30,7 @@ public class ResourceManager {
     private Sprite flySprite;
     private Sprite firedShotSprite;
     public static HashMap<String, String> tileHashMap;
+    public static ArrayList fanList;
     
     public Sprite getFiredShot()
     {
@@ -152,13 +153,19 @@ public class ResourceManager {
         height = lines.size();
         TileMap newMap = new TileMap(width, height);
         this.tileHashMap=new HashMap<String, String>();
+        this.fanList=new ArrayList();
         for (int y=0; y<height; y++) {
             String line = (String)lines.get(y);
             for (int x=0; x<line.length(); x++) {
                 char ch = line.charAt(x);
                 
-                tileHashMap.put(Integer.toString(x) + "," + Integer.toString(y), Character.toString(ch));
-               
+                tileHashMap.put("java.awt.Point[x=" + Integer.toString(x) + ",y=" + Integer.toString(y) + "]", Character.toString(ch));
+                if(ch == 'F')
+                {
+                	this.fanList.add(x);
+                }
+                
+                
                 // check if the char represents tile A, B, C etc.
                 int tile = ch - 'A';
                 if (tile >= 0 && tile < tiles.size()) {
@@ -186,15 +193,15 @@ public class ResourceManager {
                 }
             }
         }
-        for (Map.Entry<String, String> entry : tileHashMap.entrySet()) {
-            System.out.println(entry.getKey()+" : "+entry.getValue());
-        }
+        //for (Map.Entry<String, String> entry : tileHashMap.entrySet()) {
+        //    System.out.println(entry.getKey()+" : "+entry.getValue());
+        //}
         // add the player to the map
         Sprite player = (Sprite)playerSprite.clone();
         player.setX(TileMapRenderer.tilesToPixels(3));
         player.setY(0);
         newMap.setPlayer(player);
-
+        //System.out.println(this.fanList.toString());
         return newMap;
     }
 
