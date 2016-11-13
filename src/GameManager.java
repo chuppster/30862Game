@@ -143,15 +143,14 @@ public class GameManager extends GameCore {
 //            	System.out.println("GameManager.checkInput in jump.isPressed()");
             	if((moveRight.isPressed() || moveLeft.isPressed()) && !player.isFlying())
             	{player.jump(false);}
-            	if(player.isFlying())
-            	{
-            		velocityY+=player.getMaxSpeed();
-            	}
+            	
+            	velocityY-=player.getMaxSpeed();
+            	
             	
             }
             else if(moveDown.isPressed())
             {
-            	velocityY-=player.getMaxSpeed();
+            	velocityY+=player.getMaxSpeed();
             }
             if (shoot.isPressed()) {
 //            	System.out.println("GameManager.checkInput in shoot.isPressed()");
@@ -162,7 +161,7 @@ public class GameManager extends GameCore {
             	player.stopShooting();
             }
             player.setVelocityX(velocityX);
-            if(player.isFlying()){
+            if(ResourceManager.fanList.contains(TileMapRenderer.pixelsToTiles(player.getX()))){
             	player.setVelocityY(velocityY);
             }
         }
@@ -383,9 +382,8 @@ public class GameManager extends GameCore {
     private void updateCreature(Creature creature,
         long elapsedTime)
     {
-    
         // apply gravity
-        if (!creature.isFlying()) {
+        if (!creature.isFlying() && !ResourceManager.fanList.contains(TileMapRenderer.pixelsToTiles(creature.getX()))) {
             creature.setVelocityY(creature.getVelocityY() +
                 GRAVITY * elapsedTime);
 //        	TOOK AWAY GRAVITY?
@@ -424,8 +422,16 @@ public class GameManager extends GameCore {
 
         // change y
         float dy = creature.getVelocityY();
+        if(ResourceManager.fanList.contains(TileMapRenderer.pixelsToTiles(creature.getX())))
+        {
+        	System.out.println(dy);
+        	
+        	creature.setVelocityY(dy - dy/20);
+        	
+        }
         float oldY = creature.getY();
         float newY = oldY + dy * elapsedTime;
+        
         tile = getTileCollision(creature, creature.getX(), newY);
         if (tile == null) {
             creature.setY(newY);

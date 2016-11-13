@@ -166,8 +166,11 @@ public class Player extends Creature {
     */
     public void jump(boolean forceJump) {
         if (onGround || forceJump) {
-            onGround = false;
-            setVelocityY(JUMP_SPEED);
+        	if(!ResourceManager.fanList.contains(TileMapRenderer.pixelsToTiles(this.getX())))
+        	{
+	            onGround = false;
+	            setVelocityY(JUMP_SPEED);
+        	}
         }
     }
     
