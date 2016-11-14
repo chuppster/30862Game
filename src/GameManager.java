@@ -343,11 +343,11 @@ public class GameManager extends GameCore {
                 Sprite collisionSprite = getSpriteCollision(creature);
                 if (collisionSprite instanceof FiredShot && creature instanceof FiredShot)
                 {
-                	System.out.println("IGNORE THE SHOTS COLLIDING");
+                	//System.out.println("IGNORE THE SHOTS COLLIDING");
                 }
                 if(creature instanceof FiredShot && collisionSprite instanceof PowerUp)
                 {
-                	System.out.println("Ignore shooting shrooms");
+                	//System.out.println("Ignore shooting shrooms");
                 }
                 else if (collisionSprite instanceof FiredShot && !(creature instanceof Player))
                 {
@@ -413,6 +413,7 @@ public class GameManager extends GameCore {
                     TileMapRenderer.tilesToPixels(tile.x + 1));
             }
             creature.collideHorizontal();
+            
         }
         if (creature instanceof Player) {
             checkPlayerCollision((Player)creature, false);
@@ -448,6 +449,22 @@ public class GameManager extends GameCore {
                     TileMapRenderer.tilesToPixels(tile.y + 1));
             }
             creature.collideVertical();
+            //System.out.println(tile.toString());
+            //System.out.print(ResourceManager.tileHashMap);
+            if(ResourceManager.tileHashMap.get(tile.toString()).equals("G"))
+            {
+            	System.out.println("Gassy");
+            	//Need to disable shooting for a second here.
+            }
+            if(ResourceManager.tileHashMap.get(tile.toString()).equals("E"))
+            {
+            	System.out.println("BOOM");
+            	if(creature instanceof Player)
+            	{
+            		((Player) creature).subHealth(10);
+            		ResourceManager.tileHashMap.remove(tile.toString());
+            	}
+            }
         }
         if (creature instanceof Player) {
             boolean canKill = (oldY < creature.getY());

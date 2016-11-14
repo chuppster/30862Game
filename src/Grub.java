@@ -76,7 +76,7 @@ public class Grub extends Creature {
 		    	
 		    	if (Math.abs(distx) < playerDist)
 		    	{
-		    		System.out.println("WITHIN DIST");
+		    		//System.out.println("WITHIN DIST");
 		    		if (shootingPlayer == false)
 		    		{
 		    			shootingPlayer = true;
@@ -87,7 +87,7 @@ public class Grub extends Creature {
 		    	}
 		    	else if (Math.abs(distx) < playerDist + 50)
 		    	{
-		    		System.out.println("not close enough to fire immediately");
+		    		//System.out.println("not close enough to fire immediately");
 		    		if (shootingPlayer == false)
 		    		{
 		    			shootNext = true;

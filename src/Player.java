@@ -46,7 +46,7 @@ public class Player extends Creature {
     private void makeInvincible()
     {
     	long startTime = System.currentTimeMillis();
-    	invincible = true;//make invincible
+    	this.invincible = true;//make invincible
     	float startposx = this.getX();
     	//System.out.println("I'M INVINCIBLE!");
     	while((System.currentTimeMillis() - startTime <= 1000) && (Math.abs(this.getX() - startposx) <= 640)) //While less than a second has passed
@@ -55,7 +55,7 @@ public class Player extends Creature {
     			Thread.sleep(10);//wait a bit
     		}catch(Exception e){System.out.println("uh oh.");}
     	}
-    	invincible = false;//then no longer invincible
+    	this.invincible = false;//then no longer invincible
     	//System.out.println("I'M no longer INVINCIBLE!");
     	
     }
@@ -78,24 +78,27 @@ public class Player extends Creature {
     
     public void subHealth(int val)
     {
-    	if(health - val >= 40)
+    	if(!invincible)
     	{
-    		health = 40;
-    	}
-    	else
-    	{
-    		health -= val;
+	    	if(health - val >= 40)
+	    	{
+	    		health = 40;
+	    	}
+	    	else
+	    	{
+	    		health -= val;
+	    	}
     	}
     }
 
     public void regeneration()
     {
     	
-    	System.out.println("Begin Regeneration");
+    	//System.out.println("Begin Regeneration");
     	long starttime = System.currentTimeMillis();
     	float lastpos = this.getX();
     	float timemove = 0;
-	    	while(true)
+	    	while(!invincible)
 	    	{
 	    	
 	    	if(Math.abs(this.getX() - lastpos) >= 64)

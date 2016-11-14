@@ -115,11 +115,13 @@ public class ResourceManager {
     public TileMap reloadMap() {
         try {
             return loadMap(
-                "maps/map" + currentMap + ".txt");
+                "maps/" + (String)GameManager.fname);
         }
         catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
+        	try{
+        	return loadMap(
+                    "maps/map1.txt");
+        	}catch(Exception e){return null;}
         }
     }
 

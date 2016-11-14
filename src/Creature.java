@@ -92,7 +92,24 @@ public abstract class Creature extends Sprite {
         STATE_DYING, or STATE_DEAD.
     */
     public void setState(int state) {
-        if (this.state != state) {
+    	if (this instanceof Player)
+        {
+        	Player p = (Player)this;
+        	if(p.getInvincible())
+        	{
+        		this.state = STATE_NORMAL;
+        	}
+        
+	    	else if (this.state != state) {
+	            this.state = state;
+	            stateTime = 0;
+	            if (state == STATE_DYING) {
+	                setVelocityX(0);
+	                setVelocityY(0);
+	            }
+	        }
+        }
+    	else if (this.state != state) {
             this.state = state;
             stateTime = 0;
             if (state == STATE_DYING) {
@@ -153,15 +170,6 @@ public abstract class Creature extends Sprite {
             newAnim = deadLeft;
             if(!(this instanceof Player) && !(this instanceof FiredShot))
             {
-//            	if(((Player)this).getHealth() <= 30)
-//            	{
-//            		((Player)this).sethealth(((Player)this).getHealth()+10);
-//            	}
-//            	else
-//            	{
-//            		((Player)this).sethealth(40);
-//            	}
-            	
             	score.Score+=100;
             }
             
@@ -170,14 +178,6 @@ public abstract class Creature extends Sprite {
             newAnim = deadRight;
             if(!(this instanceof Player) && !(this instanceof FiredShot))
             {
-//            	if(((Player)this).gethealth() <= 30)
-//            	{
-//            		((Player)this).sethealth(((Player)this).gethealth()+10);
-//            	}
-//            	else
-//            	{
-//            		((Player)this).sethealth(40);
-//            	}
             	score.Score+=100;
             }
         }
