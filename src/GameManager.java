@@ -38,6 +38,7 @@ public class GameManager extends GameCore {
     private ResourceManager resourceManager;
     private Sound prizeSound;
     private Sound boopSound;
+    private Sound healthshroom;
     private InputManager inputManager;
     private TileMapRenderer renderer;
 
@@ -74,6 +75,7 @@ public class GameManager extends GameCore {
         soundManager = new SoundManager(PLAYBACK_FORMAT);
         prizeSound = soundManager.getSound("sounds/prize.wav");
         boopSound = soundManager.getSound("sounds/boop2.wav");
+        healthshroom = soundManager.getSound("sounds/boop2.wav");
         
         
         // start music
@@ -542,6 +544,7 @@ public class GameManager extends GameCore {
         
         else if (powerUp instanceof PowerUp.Mushroom){
         	((Player)map.getPlayer()).subHealth(-5);
+        	soundManager.play(healthshroom);
         }
         
         else if (powerUp instanceof PowerUp.Music) {
