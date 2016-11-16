@@ -6,7 +6,12 @@ import java.util.Iterator;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.*;
 import java.util.Scanner;
+import java.io.File;
 
 /**
     GameManager manages all parts of the game.
@@ -39,6 +44,9 @@ public class GameManager extends GameCore {
     private Sound prizeSound;
     private Sound boopSound;
     private Sound healthshroom;
+    private static Clip shootSound;
+    private Clip deathSound;
+    private Clip shroomSound;
     private InputManager inputManager;
     private TileMapRenderer renderer;
 
@@ -77,13 +85,49 @@ public class GameManager extends GameCore {
         boopSound = soundManager.getSound("sounds/boop2.wav");
         healthshroom = soundManager.getSound("sounds/boop2.wav");
         
+        try
+        {
+        	FloatControl gain;
+        	AudioInputStream ais = AudioSystem.getAudioInputStream(new File("sounds/Sniper_Rifle.wav"));
+        	shootSound = AudioSystem.getClip();
+        	shootSound.open(ais);
+        	gain = (FloatControl) shootSound.getControl(FloatControl.Type.MASTER_GAIN);
+        	gain.setValue(-20.0f);
+        	
+        	
+        	
+        	ais = AudioSystem.getAudioInputStream(new File("sounds/Fall_And_Splat.wav"));
+        	deathSound = AudioSystem.getClip();
+        	deathSound.open(ais);
+        	
+        	ais = AudioSystem.getAudioInputStream(new File("sounds/smb_1-up.wav"));
+        	shroomSound = AudioSystem.getClip();
+        	shroomSound.open(ais);
+        	
+        	ais = AudioSystem.getAudioInputStream(new File("sounds/ChocoboTheme.wav"));
+        	Clip mus = AudioSystem.getClip();
+        	mus.open(ais);
+        	gain = (FloatControl) mus.getControl(FloatControl.Type.MASTER_GAIN);
+        	gain.setValue(-5.0f);
+        	mus.loop(Clip.LOOP_CONTINUOUSLY);
+        	mus.start();
+        	
+//        	shootSound.start();
+        }
+        catch (Exception e)
+        {
+        	System.out.println("Error opening sound");
+        	System.out.println(e);
+        }
         
-        // start music
-        midiPlayer = new MidiPlayer();
-        Sequence sequence =
-        midiPlayer.getSequence("sounds/music.midi");
-        midiPlayer.play(sequence, true);
-        toggleDrumPlayback();
+//        // start music
+//        midiPlayer = new MidiPlayer();
+//        Sequence sequence =
+//        midiPlayer.getSequence("sounds/music.midi");
+//        midiPlayer.play(sequence, true);
+//        toggleDrumPlayback();
+
+        
 
     }
 
@@ -364,7 +408,7 @@ public class GameManager extends GameCore {
                 }
                 
                 if (creature.getState() == Creature.STATE_DEAD) {
-                    i.remove();
+                	i.remove();
                 }
                 else {
                     updateCreature(creature, elapsedTime);
@@ -427,8 +471,8 @@ public class GameManager extends GameCore {
         float dy = creature.getVelocityY();
         if(ResourceManager.fanList.contains(TileMapRenderer.pixelsToTiles(creature.getX())))
         {
-        	System.out.println(dy);
-        	
+//        	System.out.println(dy);
+//        	
         	creature.setVelocityY(dy - dy/20);
         	
         }
@@ -455,12 +499,16 @@ public class GameManager extends GameCore {
             //System.out.print(ResourceManager.tileHashMap);
             if(ResourceManager.tileHashMap.get(tile.toString()).equals("G"))
             {
-            	System.out.println("Gassy");
+//            	System.out.println("Gassy");
             	//Need to disable shooting for a second here.
+            	if (creature instanceof Player)
+            	{
+            		((Player) creature).getGassed();
+            	}
             }
             if(ResourceManager.tileHashMap.get(tile.toString()).equals("E"))
             {
-            	System.out.println("BOOM");
+//            	System.out.println("BOOM");
             	if(creature instanceof Player)
             	{
             		((Player) creature).subHealth(10);
@@ -505,6 +553,8 @@ public class GameManager extends GameCore {
         	{
         		soundManager.play(boopSound);
         		player.setState(Creature.STATE_DYING);
+            	deathSound.setFramePosition(0);
+            	deathSound.start();
         	}
         	
         }
@@ -523,6 +573,8 @@ public class GameManager extends GameCore {
             	if(!player.getInvincible())
             	{
             		player.setState(Creature.STATE_DYING);
+            		deathSound.setFramePosition(0);
+                	deathSound.start();
             	}
             }
         }
@@ -545,6 +597,8 @@ public class GameManager extends GameCore {
         else if (powerUp instanceof PowerUp.Mushroom){
         	((Player)map.getPlayer()).subHealth(-5);
         	soundManager.play(healthshroom);
+        	shroomSound.setFramePosition(0);
+        	shroomSound.start();
         }
         
         else if (powerUp instanceof PowerUp.Music) {
@@ -558,7 +612,12 @@ public class GameManager extends GameCore {
                 new EchoFilter(2000, .7f), false);
             map = resourceManager.loadNextMap();
         }
-    }
+    }   
     
+    public static void playShootSound()
+    {
+    	shootSound.setFramePosition(0);
+    	shootSound.start();
+    }
 
 }

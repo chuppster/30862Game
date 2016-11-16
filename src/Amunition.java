@@ -6,6 +6,7 @@ import javax.swing.ImageIcon;
 public class Amunition {
 
 	public boolean canShoot = true;
+	public boolean gassed = false;
 	private boolean dir = false;
 	private boolean lastDir = true;
 	private float FIRE_RATE = 0.01f;
@@ -62,6 +63,7 @@ public class Amunition {
 	
 	private void spawnInstance(Sprite sprite)
 	{
+		GameManager.playShootSound();
 		Animation an = new Animation();
 		an.addFrame(new ImageIcon(filename).getImage(), 10);
 		an.addFrame(new ImageIcon(filename).getImage(), 10);
@@ -162,12 +164,29 @@ public class Amunition {
 		    			shotCount = 0;
 		    		}
 	//		    	System.out.println("looping! - triggerPulled= " + triggerPulled);
+		    		if (gassed)
+		    		{
+		    			float distance = 0;
+		    			float curr = tilemap.getPlayer().getX();
+		    			float after = 0;
+		    			for (int m = 0; m < 10; m++)
+		    			{
+		    				Thread.sleep((long) 100);
+		    				after = tilemap.getPlayer().getX();
+		    				distance += Math.abs(after - curr);
+		    				if (distance > 500)
+		    				{
+		    					System.out.println("10 units from gas!");
+		    					break;
+		    				}
+		    				curr = after;
+		    			}
+		    			gassed = false;
+		    		}
 			    	if (triggerPulled)
 			    	{
-	//		    		System.out.println("nah");
 			    		if (canShoot)
 			    		{
-	//			    		System.out.println("shooting!");
 				    		shooting(sp);
 				    		shotCount++;
 			    		}

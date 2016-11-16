@@ -34,6 +34,11 @@ public class Player extends Creature {
 		
     }
     
+    public void getGassed()
+    {
+    	ammo.gassed = true;
+    }
+    
     public void setGravity(boolean grav)
     {
     	this.isgrav = grav;
